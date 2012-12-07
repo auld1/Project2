@@ -1,5 +1,9 @@
 include Java
 
+# now with sound!
+require 'win32/sound'
+include Win32
+
 java_import java.awt.event.ActionEvent;
 java_import java.awt.event.ActionListener;
 java_import java.awt.Color
@@ -16,7 +20,7 @@ java_import javax.swing.JOptionPane;
 java_import javax.swing.JPanel;
 
 class DotsAndBoxes
-  
+
   # boxes = (n-1) / 2
   $NUM_ROWS = 11
   $NUM_COLS = 11
@@ -145,8 +149,10 @@ class DotsAndBoxes
     pColor = nil
     if (player == 0)
       pColor = $p0_color
+      Sound.play('p0_beep.wav')
     else
       pColor = $p1_color
+      Sound.play('p1_beep.wav')
     end
     
     # claim the line in current player's color
@@ -171,6 +177,7 @@ class DotsAndBoxes
             # claim the box in current player's color and disable it
             $gameBoard.get(i).setBackground(pColor)
             $gameBoard.get(i).setEnabled(false)
+            Sound.play('box_get.wav')
             
             # add a score point to current player
             if (player == 0)
