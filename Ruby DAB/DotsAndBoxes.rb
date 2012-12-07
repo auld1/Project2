@@ -22,7 +22,7 @@ class DotsAndBoxes
   $NUM_COLS = 11
   
   # the number of available lines on the board
-  $NUM_MOVES = ( ($NUM_ROWS * $NUM_COLS) / 2)
+  $NUM_MOVES = ( ($NUM_ROWS * $NUM_COLS) / 2 )
   
   # dimensions of lines
   $LINE_LENGTH = 40
@@ -142,18 +142,18 @@ class DotsAndBoxes
     player = $turn_count % 2
     
     # get the color of whose turn it is
-    color = nil
+    pColor = nil
     if (player == 0)
-      color = $p0_color
+      pColor = $p0_color
     else
-      color = $p1_color
+      pColor = $p1_color
     end
     
     # claim the line in current player's color
-    button.setBackground(color)
+    button.setBackground(pColor)
     
     # run through entire board (dots, lines, and boxes)
-    for i in 0..($NUM_ROWS*$NUM_COLS-1) do
+    for i in 0..( ($NUM_ROWS*$NUM_COLS) - 1 ) do
       
       # if the component is a box
       if ($gameBoard.get(i).getClass.getName == "javax.swing.JPanel")
@@ -169,7 +169,7 @@ class DotsAndBoxes
                     !$gameBoard.get(i+$NUM_COLS).isEnabled)
             
             # claim the box in current player's color and disable it
-            $gameBoard.get(i).setBackground(color)
+            $gameBoard.get(i).setBackground(pColor)
             $gameBoard.get(i).setEnabled(false)
             
             # add a score point to current player
