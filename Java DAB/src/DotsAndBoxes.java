@@ -297,7 +297,7 @@ public class DotsAndBoxes {
 		//Create and set up the window.
 		JFrame frame = new JFrame("Dots and Boxes");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBackground(Color.BLACK);
+		frame.getContentPane().setBackground(Color.BLACK);
 
 		//Set up the content pane.
 		addComponentsToPane(frame.getContentPane());
