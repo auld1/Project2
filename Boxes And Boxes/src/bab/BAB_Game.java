@@ -1,3 +1,5 @@
+package bab;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,7 +28,7 @@ import javax.swing.JPanel;
  * of that box to that of the current player and give a point to that player
  */
 
-public class DotsAndBoxes {
+public class BAB_Game {
 	
 	// boxes = (n-1) / 2
 	private static final int NUM_ROWS = 23;
@@ -39,7 +41,6 @@ public class DotsAndBoxes {
 	private static final int LINE_LENGTH = 28;
 	private static final int LINE_WIDTH = 12;
 	private static final int BOX_WIDTH = 28;
-	
 	
 	// game colors
 	private static final Color p0_box = new Color(240, 80, 0);
