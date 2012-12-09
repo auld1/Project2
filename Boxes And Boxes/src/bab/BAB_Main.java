@@ -6,31 +6,31 @@ import javax.swing.border.Border;
 
 public class BAB_Main
 {
-	private final static Color backgroundColor = new Color(40, 40, 40);
+	private static final  Color backgroundColor = new Color(10, 10, 10);
 
-	private static final  String MENU_PANEL = "BAB Menu";
-	private static final String GAME_PANEL = "BAB Game";
-	private static final String INST_PANEL = "BAB Instructions";
-	private static final String ABOUT_PANEL = "BAB About";
+	private final String MENU_PANEL = "BAB Menu";
+	private final String GAME_PANEL = "BAB Game";
+	private final String INST_PANEL = "BAB Instructions";
+	private final String ABOUT_PANEL = "BAB About";
 
-	private static final String IMAGE_DIRECTORY = "images/";
-	private static final String MAIN_IMAGE = "BAB_Main.png";
-	private static final String GAME_IMAGE = "BAB_Game.png";
-	private static final String INST_IMAGE = "BAB_Inst.png";
-	private static final String ABOUT_IMAGE = "BAB_About.png";
-	private static final String BUTTON_IMAGE = "BAB_Button.gif";
+	private final String IMAGE_DIRECTORY = "images/";
+	private final String MAIN_IMAGE = "BAB_Main.png";
+	private final String GAME_IMAGE = "BAB_Game.png";
+	private final String INST_IMAGE = "BAB_Inst.png";
+	private final String ABOUT_IMAGE = "BAB_About.png";
+	private final String BUTTON_IMAGE = "BAB_Button.gif";
 	
-	private static final String TEXT_DIRECTORY = "text/";
-	private static final String INST_TEXT = "instructions.txt";
-	private static final String ABOUT_TEXT = "about.txt";
+	private final String TEXT_DIRECTORY = "text/";
+	private final String INST_TEXT = "instructions.txt";
+	private final String ABOUT_TEXT = "about.txt";
 
-	private static final String GAME = "Start Game";
-	private static final String INST = "Instructions";
-	private static final String ABOUT = "About";
-	private static final String QUIT = "Quit";
-	private static final String MENU = "Back To Menu";
+	private final String GAME = "Start Game";
+	private final String INST = "Instructions";
+	private final String ABOUT = "About";
+	private final String QUIT = "Quit";
+	private final String MENU = "Back To Menu";
 	
-	private final static int BOTTOM_PADDING = 20;
+	private final int BOTTOM_PADDING = 20;
 	
 	private JMenuBar menuBar;
 	private JPanel JP_Base; //a panel that uses CardLayout
@@ -82,7 +82,7 @@ public class BAB_Main
 		//Create the panel that contains the "cards".
 		JP_Base = new JPanel(new CardLayout());
 		JP_Base.add(createMenuPanel(), MENU_PANEL);
-		JP_Base.add(createGamePanel(), GAME_PANEL);
+//		JP_Base.add(new JPanel(), GAME_PANEL);
 		JP_Base.add(createInstPanel(), INST_PANEL);
 		JP_Base.add(createAboutPanel(), ABOUT_PANEL);
 
@@ -119,8 +119,15 @@ public class BAB_Main
 		JP_Game.setBackground(backgroundColor);
 
 		JP_Game.add(new JLabel(BAB_Utils.getImageIcon(IMAGE_DIRECTORY+GAME_IMAGE)), BorderLayout.NORTH);
-
-		JP_Game.add(menuButton_G, BorderLayout.SOUTH);
+		
+		JPanel gamePanel = new JPanel();
+		gamePanel.setBackground(backgroundColor);
+		
+		BAB_Game game = new BAB_Game(backgroundColor, 11, 11);
+		
+		game.addComponentsToPane(gamePanel);
+		
+		JP_Game.add(gamePanel, BorderLayout.CENTER);
 
 		return JP_Game;
 	}
@@ -200,6 +207,18 @@ public class BAB_Main
 
 		return menuBar;
 	}
+	
+	// TODO: Hackish, find better solution to restart game
+	private void newGame() {
+		
+		// discards and restarts panel content on each new game
+		if (JP_Base.getComponentCount() > 3)
+			JP_Base.add(createGamePanel(), GAME_PANEL);
+		else {
+			JP_Base.remove(2);
+			JP_Base.add(createGamePanel(), GAME_PANEL);
+		}
+	}
 
 	private class ButtonListener implements ActionListener
 	{
@@ -212,6 +231,7 @@ public class BAB_Main
 			switch (command)
 			{
 			case GAME:
+				newGame();
 				cl.show(JP_Base, GAME_PANEL);
 				break;
 			case INST:
@@ -244,6 +264,7 @@ public class BAB_Main
 			switch (command)
 			{
 			case GAME:
+				newGame();
 				cl.show(JP_Base, GAME_PANEL);
 				break;
 			case INST:

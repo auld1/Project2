@@ -17,7 +17,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -30,47 +29,59 @@ import javax.swing.JPanel;
 
 public class BAB_Game {
 	
-	// boxes = (n-1) / 2
-	private static final int NUM_ROWS = 23;
-	private static final int NUM_COLS = 23;
-	
-	// the number of available lines on the board
-	private static final int NUM_MOVES = ( (NUM_ROWS * NUM_COLS) / 2);
 	
 	// dimensions of lines
-	private static final int LINE_LENGTH = 28;
-	private static final int LINE_WIDTH = 12;
-	private static final int BOX_WIDTH = 28;
+	private final int LINE_LENGTH = 28;
+	private final int LINE_WIDTH = 12;
+	private final int BOX_WIDTH = 28;
 	
 	// game colors
-	private static final Color p0_box = new Color(240, 80, 0);
-	private static final Color p1_box = new Color(0, 160, 232);
-	private static final Color default_box = new Color(20, 20, 20);
+	private final Color p0_box = new Color(240, 80, 0);
+	private final Color p1_box = new Color(0, 160, 232);
+	private final Color default_box = new Color(20, 20, 20);
 	
-	private static final Color p0_line = new Color(150, 50, 0);
-	private static final Color p1_line = new Color(0, 100, 145);
+	private final Color p0_line = new Color(150, 50, 0);
+	private final Color p1_line = new Color(0, 100, 145);
 	
 	// 2-player scores
-	private static int p0_score = 0;
-	private static int p1_score = 0;
+	private int p0_score = 0;
+	private int p1_score = 0;
 	
 	/**
 	 * holds all components of the game (dots, lines, and boxes)
 	 */
-	private static ArrayList<JComponent> gameBoard = new ArrayList<JComponent>();
+	private ArrayList<JComponent> gameBoard = new ArrayList<JComponent>();
 	
 	/**
 	 * the total number of moves taken (always increases)
 	 */
-	private static int move_count = 0;
+	private int move_count = 0;
 	
 	/**
 	 * the current player move (increases contingent upon extra_turn)
 	 */
-	private static int turn_count = 0;
-	private static boolean extra_turn = false;
+	private int turn_count = 0;
+	private boolean extra_turn = false;
+	
+	private Color background;
+	
+	private int numRows;
+	private int numCols;
+	
+	// the number of available lines on the board
+	private int numMoves;
+	
+	public BAB_Game(Color background, int numBoxes_X, int numBoxes_Y) {
+		
+		this.background = background;
+		
+		this.numRows = (numBoxes_X * 2) + 1;
+		this.numCols = (numBoxes_Y * 2) + 1;
+		this.numMoves = ( (numRows * numCols) / 2);
+	}
+	
 
-	public static void addComponentsToPane(Container pane)
+	public void addComponentsToPane(Container pane)
 	{
 		// obtain dot image
 		BufferedImage dot_icon = null;
@@ -109,8 +120,8 @@ public class BAB_Game {
 		c.ipadx = 2;
 		c.ipady = 2;
 		
-		for (int i = 0; i < NUM_ROWS; i++){
-			for (int j = 0; j < NUM_COLS; j++) {
+		for (int i = 0; i < numRows; i++){
+			for (int j = 0; j < numCols; j++) {
 				
 				// GridBag row/column constraint setting
 				c.gridy = i;
@@ -130,7 +141,7 @@ public class BAB_Game {
 					else {
 						line = new JButton(new ImageIcon(line_unclaimed_h));
 						line.setPreferredSize(new Dimension(LINE_LENGTH, LINE_WIDTH));
-						line.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+						line.setBorder(BorderFactory.createLineBorder(background, 3));
 						line.addActionListener(new ButtonListener());
 						pane.add(line, c);
 						gameBoard.add(line);
@@ -144,7 +155,7 @@ public class BAB_Game {
 					if (j % 2 == 0) {
 						line = new JButton(new ImageIcon(line_unclaimed_v));
 						line.setPreferredSize(new Dimension(LINE_WIDTH, LINE_LENGTH));
-						line.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+						line.setBorder(BorderFactory.createLineBorder(background, 3));
 						line.addActionListener(new ButtonListener());
 						pane.add(line, c);
 						gameBoard.add(line);
@@ -156,7 +167,7 @@ public class BAB_Game {
 					else {
 						box = new JPanel();
 						box.setPreferredSize(new Dimension(BOX_WIDTH, BOX_WIDTH));
-						box.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+						box.setBorder(BorderFactory.createLineBorder(background, 3));
 						box.setBackground(default_box);
 						pane.add(box, c);
 						gameBoard.add(box);
@@ -166,7 +177,7 @@ public class BAB_Game {
 		}
 	}
 	
-	private static class ButtonListener implements ActionListener
+	private class ButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
@@ -198,23 +209,23 @@ public class BAB_Game {
 			move_count++;
 			
 			// check to see if the game has ended
-			if ( !(move_count < NUM_MOVES) ) {
+			if ( !(move_count < numMoves) ) {
 				JOptionPane.showMessageDialog(null, determineWinner());
 			}
 		}
 	}
 	
 	// determine who current player is
-	private static int getPlayer() { return (turn_count % 2); }
+	private int getPlayer() { return (turn_count % 2); }
 	
 	// determine box color of current player
-	private static Color getPlayerBoxColor() { return (getPlayer() == 0) ? p0_box : p1_box; }
+	private Color getPlayerBoxColor() { return (getPlayer() == 0) ? p0_box : p1_box; }
 	
 	// determine line color of current player
-	private static Color getPlayerLineColor() { return (getPlayer() == 0) ? p0_line : p1_line; }
+	private Color getPlayerLineColor() { return (getPlayer() == 0) ? p0_line : p1_line; }
 	
 	// increase the score of the current player
-	private static void scorePlayer() { if (getPlayer() == 0) { p0_score++; } else { p1_score++; } 
+	private void scorePlayer() { if (getPlayer() == 0) { p0_score++; } else { p1_score++; } 
 	
 		// TODO Error checking print statements 
 //		System.out.println("P0: " + p0_score);
@@ -223,7 +234,7 @@ public class BAB_Game {
 	}
 	
 	// determine which player has the higher score (or a tie)
-	private static String determineWinner()
+	private String determineWinner()
 	{
 		if (p0_score > p1_score) {
 			return String.format("Player 1: %d\nPlayer 2: %d\n\nRed Player 1 Wins!", p0_score, p1_score);
@@ -235,10 +246,10 @@ public class BAB_Game {
 	}
 	
 	// maintain the game's board state
-	private static void checkGameBoard() {
+	private void checkGameBoard() {
 		
 		// run through entire board (dots, lines, and boxes)
-		for (int i = 0; i < (NUM_ROWS * NUM_COLS) ; i++)
+		for (int i = 0; i < (numRows * numCols) ; i++)
 		{
 			// if the component is a box, check all lines surrounding it
 			if (gameBoard.get(i) instanceof JPanel)
@@ -247,8 +258,8 @@ public class BAB_Game {
 				if (gameBoard.get(i).isEnabled())
 				{
 					// check all the lines surrounding the box
-					if ( !gameBoard.get(i-NUM_COLS).isEnabled() && !gameBoard.get(i-1).isEnabled() && 
-							!gameBoard.get(i+1).isEnabled() && !gameBoard.get(i+NUM_COLS).isEnabled() )
+					if ( !gameBoard.get(i-numCols).isEnabled() && !gameBoard.get(i-1).isEnabled() && 
+							!gameBoard.get(i+1).isEnabled() && !gameBoard.get(i+numCols).isEnabled() )
 					{
 						/*
 						 *  player claims the box if his move completes a box
@@ -267,7 +278,7 @@ public class BAB_Game {
 		}
 	}
 	
-	private static void playSound(String url) {
+	private void playSound(String url) {
 		
 		File soundFile = new File(url);
 		
@@ -287,34 +298,5 @@ public class BAB_Game {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	}
-
-	/**
-	 * Create the GUI and show it.  For thread safety,
-	 * this method should be invoked from the
-	 * event-dispatching thread.
-	 */
-	private static void createAndShowGUI() {
-		//Create and set up the window.
-		JFrame frame = new JFrame("Dots and Boxes");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setBackground(Color.BLACK);
-
-		//Set up the content pane.
-		addComponentsToPane(frame.getContentPane());
-
-		//Display the window.
-		frame.pack();
-		frame.setVisible(true);	
-	}
-
-	public static void main(String[] args) {
-		//Schedule a job for the event-dispatching thread:
-		//creating and showing this application's GUI.
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				createAndShowGUI();
-			}
-		});
 	}
 }
