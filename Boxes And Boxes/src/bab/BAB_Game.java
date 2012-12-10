@@ -8,11 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -80,7 +75,6 @@ public class BAB_Game {
 		this.numMoves = ( (numRows * numCols) / 2);
 	}
 	
-
 	public void addComponentsToPane(Container pane)
 	{
 		// obtain dot image
@@ -195,9 +189,9 @@ public class BAB_Game {
 			checkGameBoard();
 			
 			if (getPlayer() == 0)	
-				playSound("sounds/p0_beep.wav");
+				BAB_Utils.playSound("sounds/p0_beep.wav");
 			else
-				playSound("sounds/p1_beep.wav");
+				BAB_Utils.playSound("sounds/p1_beep.wav");
 
 			// move to the next turn (unless player has extra turn)
 			if (!extra_turn)
@@ -271,32 +265,10 @@ public class BAB_Game {
 						scorePlayer();
 						extra_turn = true;
 						
-						playSound("sounds/box_get.wav");
+						BAB_Utils.playSound("sounds/box_get.wav");
 					}
 				}
 			}
-		}
-	}
-	
-	private void playSound(String url) {
-		
-		File soundFile = new File(url);
-		
-		try {
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
-			Clip clip = AudioSystem.getClip();
-			clip.open(audioIn);
-			clip.start();
-			
-		} catch (UnsupportedAudioFileException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
 	}
 }

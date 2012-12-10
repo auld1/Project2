@@ -1,6 +1,7 @@
 package bab;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -80,9 +81,9 @@ public class BAB_Main
 		menuButton_A.addActionListener(new ButtonListener());
 
 		//Create the panel that contains the "cards".
-		JP_Base = new JPanel(new CardLayout());
+		JP_Base = new JPanel(new CardLayout()); 
+		
 		JP_Base.add(createMenuPanel(), MENU_PANEL);
-//		JP_Base.add(new JPanel(), GAME_PANEL);
 		JP_Base.add(createInstPanel(), INST_PANEL);
 		JP_Base.add(createAboutPanel(), ABOUT_PANEL);
 
@@ -91,7 +92,10 @@ public class BAB_Main
 
 	private JPanel createMenuPanel()
 	{
+		BAB_Utils.playSound("sounds/silence.wav");
+		
 		JPanel JP_Menu = new JPanel(new BorderLayout());
+		JP_Menu.setName(MENU_PANEL);
 
 		JP_Menu.setBackground(backgroundColor);
 
@@ -115,6 +119,7 @@ public class BAB_Main
 	private JPanel createGamePanel()
 	{
 		JPanel JP_Game = new JPanel(new BorderLayout());
+		JP_Game.setName(GAME_PANEL);
 
 		JP_Game.setBackground(backgroundColor);
 
@@ -135,6 +140,7 @@ public class BAB_Main
 	private JPanel createInstPanel()
 	{
 		JPanel JP_Inst = new JPanel(new BorderLayout());
+		JP_Inst.setName(INST_PANEL);
 
 		JP_Inst.setBackground(backgroundColor);
 
@@ -153,6 +159,7 @@ public class BAB_Main
 	private JPanel createAboutPanel()
 	{
 		JPanel JP_About = new JPanel(new BorderLayout());
+		JP_About.setName(ABOUT_PANEL);
 
 		JP_About.setBackground(backgroundColor);
 
@@ -208,16 +215,19 @@ public class BAB_Main
 		return menuBar;
 	}
 	
-	// TODO: Hackish, find better solution to restart game
+	// resets game
 	private void newGame() {
 		
-		// discards and restarts panel content on each new game
-		if (JP_Base.getComponentCount() > 3)
-			JP_Base.add(createGamePanel(), GAME_PANEL);
-		else {
-			JP_Base.remove(2);
-			JP_Base.add(createGamePanel(), GAME_PANEL);
-		}
+		Component[] components = JP_Base.getComponents();
+		
+		for (Component component : components)
+			if (component.getName() == GAME_PANEL)
+				JP_Base.remove(component);
+		
+		JPanel gamePanel = createGamePanel();
+		gamePanel.setName(GAME_PANEL);
+		
+		JP_Base.add(gamePanel, GAME_PANEL);
 	}
 
 	private class ButtonListener implements ActionListener
@@ -231,22 +241,27 @@ public class BAB_Main
 			switch (command)
 			{
 			case GAME:
+				BAB_Utils.playSound("sounds/start.wav");
 				newGame();
 				cl.show(JP_Base, GAME_PANEL);
 				break;
 			case INST:
+				BAB_Utils.playSound("sounds/select.wav");
 				cl.show(JP_Base, INST_PANEL);
 				break;
 			case ABOUT:
+				BAB_Utils.playSound("sounds/select.wav");
 				cl.show(JP_Base, ABOUT_PANEL);
 				break;
 			case QUIT:
 				System.exit(0);
 				break;
 			case MENU:
+				BAB_Utils.playSound("sounds/select.wav");
 				cl.show(JP_Base, MENU_PANEL);
 				break;
 			default:
+				BAB_Utils.playSound("sounds/select.wav");
 				cl.show(JP_Base, MENU_PANEL);
 				break;
 			}
@@ -307,6 +322,9 @@ public class BAB_Main
 		
 		bab.addComponentToPane(frame.getContentPane());
 
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setLocation(dim.width/2-300, (dim.height/2) - 350);
+		
 		//Display the window.
 
 		frame.pack();
